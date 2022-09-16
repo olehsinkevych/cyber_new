@@ -23,3 +23,6 @@ class TemperatureCRUD:
         self.db_session.refresh(db_record)
         return db_record
 
+    def read_interval(self, start_interval: str, end_interval: str):
+        pass
+

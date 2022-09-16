@@ -1,3 +1,4 @@
+from typing import List
 from fastapi import APIRouter, Depends
 from fastapi import status
 from sqlalchemy.orm.session import Session
@@ -25,5 +26,18 @@ def read_on_id(temp_id: int, db: Session = Depends(get_db)):
 def create(record: TemperatureCreate, db: Session = Depends(get_db)):
     crud = TemperatureCRUD(db_session=db)
     return crud.create_record(record)
+
+
+@router.get("/temperature/...", response_model=List[TemperatureGet],
+            status_code=status.HTTP_200_OK)
+def read_interval(start_interval: str, end_interval: str, db: Session = Depends(get_db)):
+    crud = TemperatureCRUD(db_session=db)
+    records = crud.read_interval(start_interval, end_interval)
+    if not records:
+        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND,
+                            detail="Item not found")
+    return records
+
+
 
 

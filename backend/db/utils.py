@@ -23,4 +23,5 @@ def read_save_base(path='backend/data/interior_temp.csv') -> None:
     df.to_sql(sqlite_table, sqlite_connection, if_exists='append',
               index=False, index_label=None, chunksize=None)
 
+
 read_save_base()
