@@ -1,6 +1,8 @@
+from datetime import datetime
 from sqlalchemy.orm.session import Session
 from sqlalchemy.future import select
 from sqlalchemy import update
+from sqlalchemy import and_
 from typing import Optional
 from backend.models.measurements import Temperature
 from backend.schemas.measurements import TemperatureCreate
@@ -23,6 +25,7 @@ class TemperatureCRUD:
         self.db_session.refresh(db_record)
         return db_record
 
-    def read_interval(self, start_interval: str, end_interval: str):
-        pass
-
+    def read_interval(self, start_date: datetime, end_date: datetime):
+        return self.db_session.query(Temperature).filter(and_(
+            Temperature.time_point >= start_date,
+            Temperature.time_point <= end_date)).all()

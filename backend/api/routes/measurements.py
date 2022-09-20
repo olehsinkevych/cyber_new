@@ -1,4 +1,5 @@
 from typing import List
+from datetime import datetime
 from fastapi import APIRouter, Depends
 from fastapi import status
 from sqlalchemy.orm.session import Session
@@ -28,9 +29,9 @@ def create(record: TemperatureCreate, db: Session = Depends(get_db)):
     return crud.create_record(record)
 
 
-@router.get("/temperature/...", response_model=List[TemperatureGet],
+@router.get("/temperature/range/", response_model=List[TemperatureGet],
             status_code=status.HTTP_200_OK)
-def read_interval(start_interval: str, end_interval: str, db: Session = Depends(get_db)):
+def read_interval(start_interval: datetime, end_interval: datetime, db: Session = Depends(get_db)):
     crud = TemperatureCRUD(db_session=db)
     records = crud.read_interval(start_interval, end_interval)
     if not records:
