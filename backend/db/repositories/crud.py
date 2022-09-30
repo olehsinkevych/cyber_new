@@ -29,3 +29,12 @@ class TemperatureCRUD:
         return self.db_session.query(Temperature).filter(and_(
             Temperature.time_point >= start_date,
             Temperature.time_point <= end_date)).all()
+
+    def update_temperature(self):
+        pass
+
+    def delete_temperature(self):
+        pass
+
+    def read_all(self):
+        pass
