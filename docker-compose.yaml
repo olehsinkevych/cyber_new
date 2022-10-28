@@ -1,0 +1,58 @@
+version: '3.8'
+
+services:
+  jupyter:
+    image: jupyter/base-notebook:latest
+    container_name: jupyter
+    build: .
+    ports:
+      - "8888:8888"
+    env_file:
+      - .env
+    volumes:
+      - ${ROOT_DIR}:/cyber_app
+    command:
+      [
+        "jupyter",
+        "notebook",
+        "--port=8888",
+        "--ip=0.0.0.0",
+        "--allow-root",
+        "--NotebookApp.token=${JUPYTER_TOKEN}"
+      ]
+
+  mlflow:
+    build: .
+    ports:
+      - "5000:5000"
+    volumes:
+      - mlrun_data:/mlflow
+    env_file:
+      - .env
+    environment:
+      - BACKEND=postgresql://${POSTGRES_USER}:${POSTGRES_PASSWORD}@db:${POSTGRES_PORT}/${POSTGRES_DB}
+      - ARTIFACTS=/mlflow
+    command:
+      - sh
+      - -c
+      - mlflow server
+          --port 5000
+          --host 0.0.0.0
+          --backend-store-uri $${BACKEND}
+          --default-artifact-root $${ARTIFACTS}
+    depends_on:
+      - db
+
+  db:
+    image: postgres:15-alpine
+    restart: always
+    volumes:
+      - postgres_data:/var/lib/postgresql/data/
+    ports:
+      - "5432"
+    env_file:
+      - .env
+
+volumes:
+  postgres_data:
+  mlrun_data:
