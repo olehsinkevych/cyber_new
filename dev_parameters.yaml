@@ -1,0 +1,19 @@
+lstm_model:
+  hidden_vector: 100
+  activation: tanh
+  learning_rate: 0.01
+  n_in: 24
+  n_out: 3
+
+processed_data_config:
+  x_train: data/processed/x_train.npy
+  x_val: data/processed/x_val.npy
+  y_train: data/processed/y_train.npy
+  y_val: data/processed/y_val.npy
+
+mlflow_config:
+  artifacts_dir: artifacts
+  experiment_name: model_tuning
+  run_name: model_tuning
+  remote_server_uri: http://localhost:5000
+  save_local_path: backend/models/trained
